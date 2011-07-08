@@ -10,6 +10,8 @@ module Rack
     end
 
     def initialize(app, options = {})
+      puts options.inspect
+
       @app = app
 
       @hsts = options[:hsts]
@@ -49,9 +51,11 @@ module Rack
       def redirect_to_https(env)
         req        = Request.new(env)
         url        = URI(req.url)
+        puts "url (before): #{url}"
         url.scheme = "https"
         url.host   = @host if @host
         url.port   = @port if @port
+        puts "url (after): #{url}"
         headers    = hsts_headers.merge('Content-Type' => 'text/html',
                                         'Location'     => url.to_s)
 
